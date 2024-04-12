@@ -17,5 +17,30 @@ public class Bishop extends Piece{
 
         this.sprite = sheet.getSubimage(2*sheetScale, (isWhite ? 0 : sheetScale), sheetScale, sheetScale).getScaledInstance(board.tileSize, board.tileSize, BufferedImage.SCALE_SMOOTH);
     }
+
+    public boolean isValidMovement(int col, int row){
+        return Math.abs(col - this.col) == Math.abs(row - this.row);
+    }
+
+    public boolean moveCollidesWithPiece(int col, int row){
+        /* Integer.compare returns -1 if the first number is smaller, 
+        0 if they are equal, and 1 if the first number is larger */
+        int xDir = Integer.compare(col, this.col);
+        int yDir = Integer.compare(row, this.row);
+
+        int x = this.col + xDir;
+        int y = this.row + yDir;
+
+        while (x != col || y != row){
+            if (board.getPiece(x, y) != null){
+                return true;
+            }
+
+            x += xDir;
+            y += yDir;
+        }
+
+        return false;
+    }
 }
 

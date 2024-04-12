@@ -30,6 +30,8 @@ public class Board extends JPanel {
     final Color light_tile = new Color(204,183,174);
     final Color moveable_tile = new Color(68,180, 57, 190);
 
+    public int enPassantTile = -1;
+
     public Board() {
         this.setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
 
@@ -50,10 +52,42 @@ public class Board extends JPanel {
     }
 
     public void makeMove(Move move){
+
+        if (move.piece.name.equals("Pawn")){
+            this.movePawn(move);
+        } else{
+            move.piece.col = move.newcol;
+            move.piece.row = move.newrow;
+            move.piece.xPos = move.newcol * tileSize;
+            move.piece.yPos = move.newrow * tileSize;
+
+            move.piece.isFirstMove = false;
+
+            capture(move);
+
+        }
+        
+    }
+
+    public void movePawn(Move move){
+
+        // en passant
+        int dir = (move.piece.isWhite ? -1 : 1);
+        if (this.getTileNumber(move.newcol, move.newrow) == this.enPassantTile){
+            move.capture = this.getPiece(move.newcol, move.newrow - dir);
+        }
+        if (Math.abs(move.newrow - move.oldrow) == 2){
+            this.enPassantTile = this.getTileNumber(move.newcol, move.newrow - dir);
+        } else {
+            this.enPassantTile = -1;
+        }
+
         move.piece.col = move.newcol;
         move.piece.row = move.newrow;
         move.piece.xPos = move.newcol * tileSize;
         move.piece.yPos = move.newrow * tileSize;
+
+        move.piece.isFirstMove = false;
 
         capture(move);
     }
@@ -68,6 +102,12 @@ public class Board extends JPanel {
         if (this.sameTeam(move.piece, move.capture)){
             return false;
         }
+        if (!move.piece.isValidMovement(move.newcol, move.newrow)){
+            return false;
+        }
+        if (move.piece.moveCollidesWithPiece(move.newcol, move.newrow)){
+            return false;
+        }
         return true;
     }
 
@@ -76,6 +116,10 @@ public class Board extends JPanel {
             return false;
         }
         return piece1.isWhite == piece2.isWhite;
+    }
+
+    public int getTileNumber(int col, int row){
+        return row * this.rows + col;
     }
 
     public void addPieces(){
@@ -127,7 +171,7 @@ public class Board extends JPanel {
         for (Piece piece : pieceList) {
             piece.paint(g2d);
         }
-        
+
         if (selectedPiece != null){
             for (int r = 0; r < rows; r++){
                 for (int c = 0; c < cols; c++){

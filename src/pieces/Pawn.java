@@ -17,4 +17,29 @@ public class Pawn extends Piece{
 
         this.sprite = sheet.getSubimage(5*sheetScale, (isWhite ? 0 : sheetScale), sheetScale, sheetScale).getScaledInstance(board.tileSize, board.tileSize, BufferedImage.SCALE_SMOOTH);
     }
+
+    public boolean isValidMovement(int col, int row){
+        int dir = (isWhite ? -1 : 1);
+        // push pawn 1
+        if (col == this.col && row == this.row + dir && board.getPiece(col, row) == null){
+            return true;
+        } 
+        // push pawn 2
+        if (col == this.col && row == this.row + 2*dir && this.isFirstMove && board.getPiece(col, row) == null){
+            return true;
+        }
+        // capture
+        if (Math.abs(col - this.col) == 1 && row == this.row + dir && board.getPiece(col, row) != null){
+            return true;
+        }
+        // en passant left
+        if (board.getTileNumber(col, row) == board.enPassantTile && col == this.col - 1 && row == this.row + dir && board.getPiece(col, row - dir) != null){
+            return true;
+        }
+        // en passant right
+        if (board.getTileNumber(col, row) == board.enPassantTile && col == this.col + 1 && row == this.row + dir && board.getPiece(col, row - dir) != null){
+            return true;
+        }
+        return false;
+    }
 }
