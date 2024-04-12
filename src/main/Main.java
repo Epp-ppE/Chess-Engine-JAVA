@@ -5,7 +5,7 @@ import javax.swing.*;
 
 
 public class Main {
-    static final Color game_bgColor = new Color(170, 170, 170);
+    static final Color game_bgColor = new Color(25,29,50);
     public static void main(String[] args) {
         JFrame frame = new JFrame("Hello World");
         frame.getContentPane().setBackground(game_bgColor);
