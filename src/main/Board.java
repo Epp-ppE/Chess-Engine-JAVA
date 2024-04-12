@@ -20,15 +20,62 @@ public class Board extends JPanel {
 
     ArrayList<Piece> pieceList = new ArrayList<Piece>();
 
+    Input input = new Input(this);
+
+    public Piece selectedPiece;
+
     public final int tileSize = 100;
     
     final Color dark_tile = new Color(112,102,119);
     final Color light_tile = new Color(204,183,174);
+    final Color moveable_tile = new Color(68,180, 57, 190);
 
     public Board() {
         this.setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
+
+        this.addMouseListener(input);
+        this.addMouseMotionListener(input);
+
         //this.setBackground(Color.GRAY);
         this.addPieces();
+    }
+
+    public Piece getPiece(int col, int row){
+        for (Piece piece : pieceList) {
+            if (piece.col == col && piece.row == row) {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    public void makeMove(Move move){
+        move.piece.col = move.newcol;
+        move.piece.row = move.newrow;
+        move.piece.xPos = move.newcol * tileSize;
+        move.piece.yPos = move.newrow * tileSize;
+
+        capture(move);
+    }
+
+    public void capture(Move move){
+        pieceList.remove(move.capture);
+    }
+
+    public boolean isValidMove(Move move){
+
+        // No capturing own pieces
+        if (this.sameTeam(move.piece, move.capture)){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean sameTeam(Piece piece1, Piece piece2){
+        if (piece1 == null || piece2 == null) {
+            return false;
+        }
+        return piece1.isWhite == piece2.isWhite;
     }
 
     public void addPieces(){
@@ -80,5 +127,23 @@ public class Board extends JPanel {
         for (Piece piece : pieceList) {
             piece.paint(g2d);
         }
+        
+        if (selectedPiece != null){
+            for (int r = 0; r < rows; r++){
+                for (int c = 0; c < cols; c++){
+                    if (this.isValidMove(new Move(this, selectedPiece, c, r))){
+                        g2d.setColor(moveable_tile);
+
+                        // fillRect(int x, int y, int width, int height)
+                        // g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                        //fillOval(int x, int y, int width, int height)
+                        g2d.fillOval(c * tileSize + tileSize / 2 - 10, r * tileSize + tileSize / 2 - 10, 20, 20);
+                    }
+                }
+            }
+        }
+        
+
+        
     }
 }
