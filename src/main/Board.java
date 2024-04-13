@@ -63,7 +63,7 @@ public class Board extends JPanel {
 
             move.piece.isFirstMove = false;
 
-            capture(move);
+            capture(move.capture);
 
         }
         
@@ -81,6 +81,12 @@ public class Board extends JPanel {
         } else {
             this.enPassantTile = -1;
         }
+        // promotion
+        int promotionTile = (move.piece.isWhite ? 0 : 7);
+        if (move.newrow == promotionTile){
+            // promotion
+            promotePawn(move);
+        }
 
         move.piece.col = move.newcol;
         move.piece.row = move.newrow;
@@ -89,11 +95,16 @@ public class Board extends JPanel {
 
         move.piece.isFirstMove = false;
 
-        capture(move);
+        capture(move.capture);
     }
 
-    public void capture(Move move){
-        pieceList.remove(move.capture);
+    public void promotePawn(Move move){
+        pieceList.add(new Queen(this, move.newcol, move.newrow, move.piece.isWhite));
+        capture(move.piece);
+    }
+
+    public void capture(Piece piece){
+        pieceList.remove(piece);
     }
 
     public boolean isValidMove(Move move){
