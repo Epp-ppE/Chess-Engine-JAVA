@@ -23,6 +23,7 @@ public class Board extends JPanel {
     Input input = new Input(this);
 
     public Piece selectedPiece;
+    public boolean isWhiteTurn = true;
     
     public CheckScanner checkScanner = new CheckScanner(this);
 
@@ -68,7 +69,8 @@ public class Board extends JPanel {
             move.piece.isFirstMove = false;
 
             capture(move.capture);
-
+            switchTurn();
+            
         }
         
     }
@@ -95,6 +97,7 @@ public class Board extends JPanel {
         move.piece.isFirstMove = false;
 
         capture(move.capture);
+        switchTurn();
     }
 
     public void movePawn(Move move){
@@ -124,6 +127,7 @@ public class Board extends JPanel {
         move.piece.isFirstMove = false;
 
         capture(move.capture);
+        switchTurn();
     }
 
     public void promotePawn(Move move){
@@ -135,8 +139,14 @@ public class Board extends JPanel {
         pieceList.remove(piece);
     }
 
-    public boolean isValidMove(Move move){
+    public void switchTurn(){
+        this.isWhiteTurn = !this.isWhiteTurn;
+    }
 
+    public boolean isValidMove(Move move){
+        if (move.piece.isWhite != this.isWhiteTurn){
+            return false;
+        }
         // No capturing own pieces
         if (this.sameTeam(move.piece, move.capture)){
             return false;
