@@ -23,6 +23,8 @@ public class Board extends JPanel {
     Input input = new Input(this);
 
     public Piece selectedPiece;
+    
+    public CheckScanner checkScanner = new CheckScanner(this);
 
     public final int tileSize = 100;
     
@@ -55,7 +57,9 @@ public class Board extends JPanel {
 
         if (move.piece.name.equals("Pawn")){
             this.movePawn(move);
-        } else{
+        } else if (move.piece.name.equals("King")){
+            moveKing(move);
+        } else {
             move.piece.col = move.newcol;
             move.piece.row = move.newrow;
             move.piece.xPos = move.newcol * tileSize;
@@ -67,6 +71,30 @@ public class Board extends JPanel {
 
         }
         
+    }
+
+    private void moveKing(Move move){
+
+        if (Math.abs(move.piece.col - move.newcol) == 2) {
+            Piece rook;
+            if (move.newcol == 6){
+                rook = this.getPiece(7, move.newrow);
+                rook.col = 5;
+                rook.xPos = 5 * tileSize;
+            } else if (move.newcol == 2){
+                rook = this.getPiece(0, move.newrow);
+                rook.col = 3;
+                rook.xPos = 3 * tileSize;
+            }
+        }
+        move.piece.col = move.newcol;
+        move.piece.row = move.newrow;
+        move.piece.xPos = move.newcol * tileSize;
+        move.piece.yPos = move.newrow * tileSize;
+
+        move.piece.isFirstMove = false;
+
+        capture(move.capture);
     }
 
     public void movePawn(Move move){
@@ -117,6 +145,9 @@ public class Board extends JPanel {
             return false;
         }
         if (move.piece.moveCollidesWithPiece(move.newcol, move.newrow)){
+            return false;
+        }
+        if (checkScanner.isKingChecked(move)){
             return false;
         }
         return true;
@@ -200,5 +231,14 @@ public class Board extends JPanel {
         
 
         
+    }
+
+    public Piece findKing(boolean isWhite){
+        for (Piece piece : pieceList) {
+            if (piece.name.equals("King") && piece.isWhite == isWhite) {
+                return piece;
+            }
+        }
+        return null;
     }
 }
