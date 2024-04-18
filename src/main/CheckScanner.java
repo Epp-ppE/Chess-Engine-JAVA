@@ -22,7 +22,7 @@ public class CheckScanner {
             kingCol = move.newcol;
             kingRow = move.newrow;
         }
-
+        
         return  hitByRook   (move.newcol, move.newrow, king, kingCol, kingRow, 0, 1) ||
                 hitByRook   (move.newcol, move.newrow, king, kingCol, kingRow, 1, 0) ||
                 hitByRook   (move.newcol, move.newrow, king, kingCol, kingRow, 0, -1) ||
@@ -34,15 +34,17 @@ public class CheckScanner {
                 hitByBishop (move.newcol, move.newrow, king, kingCol, kingRow, 1, 1) ||
 
                 hitByKnight(move.newcol, move.newrow, king, kingCol, kingRow) ||
-                hitByPawn(move.newcol, move.newrow, king, kingCol, kingRow)||
+                hitByPawn(move.newcol, move.newrow, king, kingCol, kingRow) ||
 
                 hitByKing(king, kingCol, kingRow);
                 
     }
 
     private boolean hitByRook(int col, int row, Piece king, int kingCol, int kingRow, int colVal, int rowVal){
-        for (int i = 0; i < 8; i++){
+        for (int i = 1; i < board.cols; i++){
+            // check whether there is an ally piece in the vertical or horizontal path before the rook/queen
             if (kingCol + (i * colVal) == col && kingRow + (i * rowVal) == row){
+                // there is an ally piece in the path
                 break;
             }
             Piece piece = board.getPiece(kingCol + (i* colVal), kingRow + (i * rowVal));
@@ -99,7 +101,7 @@ public class CheckScanner {
     }
 
     private boolean hitByBishop(int col, int row, Piece king, int kingCol, int kingRow, int colVal, int rowVal){
-        for (int i = 0; i < 8; i++){
+        for (int i = 1; i < board.cols; i++){
             if (kingCol + (i * colVal) == col && kingRow + (i * rowVal) == row){
                 break;
             }

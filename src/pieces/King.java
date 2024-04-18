@@ -1,7 +1,6 @@
 package src.pieces;
 
 import src.main.Board;
-import src.main.CheckScanner;
 import src.main.Move;
 
 import java.awt.image.BufferedImage;

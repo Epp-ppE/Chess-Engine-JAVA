@@ -42,12 +42,22 @@ public class Input extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
         int col = e.getX() / board.tileSize;
         int row = e.getY() / board.tileSize;
+        // System.out.println("col: " + col + " row: " + row);
 
         if (board.selectedPiece != null){
             Move move = new Move(board, board.selectedPiece, col, row);
+            System.out.println("move: " + move.oldcol + " " + move.oldrow + " : " + move.newcol + " " + move.newrow);
             if (board.isValidMove(move)) {
+                // System.out.println("--------------Move in mouseReleased after isValidMove-----------------");
+                // System.out.println("Piece: " + move.piece.name);
+                // System.out.println("move.newcol: " + move.newcol);
+                // System.out.println("move.newrow: " + move.newrow);
                 board.makeMove(move);
             } else {
+                // System.out.println("--------------Move in mouseReleased after isValidMove-----------------");
+                // System.out.println("Piece: " + move.piece.name);
+                // System.out.println("move.newcol: " + move.newcol);
+                // System.out.println("move.newrow: " + move.newrow);
                 board.selectedPiece.xPos = board.selectedPiece.col * board.tileSize;
                 board.selectedPiece.yPos = board.selectedPiece.row * board.tileSize;
             }
