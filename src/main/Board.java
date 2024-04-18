@@ -156,16 +156,12 @@ public class Board extends JPanel {
         if (move.piece.moveCollidesWithPiece(move.newcol, move.newrow)){
             return false;
         }
-        // System.out.println("--------------Move in isValidMove before isiKingChecked-----------------");
-        // System.out.println("Piece: " + move.piece.name);
-        // System.out.println("move.newcol: " + move.newcol);
-        // System.out.println("move.newrow: " + move.newrow);
         if (checkScanner.isKingChecked(move)){
             return false;
         }
-        // if (move.piece.isWhite != this.isWhiteTurn){
-        //     return false;
-        // }
+        if (move.piece.isWhite != this.isWhiteTurn){
+            return false;
+        }
         return true;
     }
 
