@@ -32,8 +32,11 @@ public class Board extends JPanel {
     final Color dark_tile = new Color(112,102,119);
     final Color light_tile = new Color(204,183,174);
     final Color moveable_tile = new Color(68,180, 57, 190);
+    final Color check_tile = new Color(179, 41, 41, 127);
 
     public int enPassantTile = -1;
+
+    public boolean boardEnable = true;
 
     public Board() {
         this.setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
@@ -148,6 +151,9 @@ public class Board extends JPanel {
     }
 
     public boolean isValidMove(Move move){
+        if (!boardEnable){
+            return false;
+        }
         // No capturing own pieces
         if (this.sameTeam(move.piece, move.capture)){
             return false;
@@ -161,9 +167,9 @@ public class Board extends JPanel {
         if (checkScanner.isKingChecked(move)){
             return false;
         }
-        // if (move.piece.isWhite != this.isWhiteTurn){
-        //     return false;
-        // }
+        if (move.piece.isWhite != this.isWhiteTurn){
+            return false;
+        }
         return true;
     }
 
@@ -225,6 +231,16 @@ public class Board extends JPanel {
             }
         }
 
+        Piece Bking = this.findKing(false);
+        Piece Wking = this.findKing(true);
+        if (checkScanner.isKingChecked(new Move(this, Bking, 0, 0))){
+            g2d.setColor(check_tile);
+            g2d.fillRect(Bking.col * tileSize, Bking.row * tileSize, tileSize, tileSize);
+        } else if (checkScanner.isKingChecked(new Move(this, Wking, 0, 0))){
+            g2d.setColor(check_tile);
+            g2d.fillRect(Wking.col * tileSize, Wking.row * tileSize, tileSize, tileSize);
+        }
+
         for (Piece piece : pieceList) {
             piece.paint(g2d);
         }
@@ -235,14 +251,18 @@ public class Board extends JPanel {
                     if (this.isValidMove(new Move(this, selectedPiece, c, r))){
                         g2d.setColor(moveable_tile);
 
-                        // fillRect(int x, int y, int width, int height)
+                        // fillRect(int x, int y, int width, int height) <-- draws a rectangle
                         // g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
-                        //fillOval(int x, int y, int width, int height)
+
+                        //fillOval(int x, int y, int width, int height) <-- draws an oval
                         g2d.fillOval(c * tileSize + tileSize / 2 - 10, r * tileSize + tileSize / 2 - 10, 20, 20);
                     }
                 }
             }
         }
+
+        
+
     }
 
     public Piece findKing(boolean isWhite){
@@ -274,6 +294,7 @@ public class Board extends JPanel {
             else {
                 System.out.println("Stalemate");
             }
+            this.boardEnable = false;
         }
     }
 
