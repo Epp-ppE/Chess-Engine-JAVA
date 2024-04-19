@@ -117,4 +117,29 @@ public class CheckScanner {
         return false;
     }
     
+    public boolean havePossibleMovesLeft(boolean isWhite){
+        for (Piece piece : board.pieceList) {
+            if (piece.isWhite == isWhite){
+                board.selectedPiece = piece;
+                if (pieceCanMove(piece)){
+                    board.selectedPiece = null;
+                    return true;
+                }
+            }
+        }
+        board.selectedPiece = null;
+        return false;
+    }
+    
+    public boolean pieceCanMove(Piece piece){
+        for (int r = 0; r < board.rows; r++){
+            for (int c = 0; c < board.cols; c++){
+                if (board.isValidMove(new Move(board, piece, c, r))){
+                    System.out.println(piece.isWhite + "\'s"+ piece.name + " can move to " + c + " " + r);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

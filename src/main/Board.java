@@ -70,7 +70,23 @@ public class Board extends JPanel {
 
             capture(move.capture);
             switchTurn();
-            
+            if (isGameOver()){
+                System.out.println("Game Over");
+                System.out.println("Turn: " + isWhiteTurn);
+                // check if the king is checked
+                if (checkScanner.isKingChecked(new Move(this, this.findKing(this.isWhiteTurn), 0, 0))){
+                    // checkmate
+                    if (this.isWhiteTurn){
+                        System.out.println("Black wins");
+                    } else {
+                        System.out.println("White wins");
+                    }
+                }
+                // stalemate
+                else {
+                    System.out.println("Stalemate");
+                }
+            }
         }
         
     }
@@ -241,9 +257,6 @@ public class Board extends JPanel {
                 }
             }
         }
-        
-
-        
     }
 
     public Piece findKing(boolean isWhite){
@@ -254,4 +267,11 @@ public class Board extends JPanel {
         }
         return null;
     }
+
+    public boolean isGameOver(){
+        return !checkScanner.havePossibleMovesLeft(this.isWhiteTurn);
+    }
+
+
+
 }
