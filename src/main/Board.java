@@ -70,23 +70,7 @@ public class Board extends JPanel {
 
             capture(move.capture);
             switchTurn();
-            if (isGameOver()){
-                System.out.println("Game Over");
-                System.out.println("Turn: " + isWhiteTurn);
-                // check if the king is checked
-                if (checkScanner.isKingChecked(new Move(this, this.findKing(this.isWhiteTurn), 0, 0))){
-                    // checkmate
-                    if (this.isWhiteTurn){
-                        System.out.println("Black wins");
-                    } else {
-                        System.out.println("White wins");
-                    }
-                }
-                // stalemate
-                else {
-                    System.out.println("Stalemate");
-                }
-            }
+            handleGameOver();
         }
         
     }
@@ -115,6 +99,7 @@ public class Board extends JPanel {
 
         capture(move.capture);
         switchTurn();
+        handleGameOver();
     }
 
     public void movePawn(Move move){
@@ -130,7 +115,7 @@ public class Board extends JPanel {
             this.enPassantTile = -1;
         }
         // promotion
-        int promotionTile = (move.piece.isWhite ? 0 : 7);
+        int promotionTile = (move.piece.isWhite ? 0 : cols - 1);
         if (move.newrow == promotionTile){
             // promotion
             promotePawn(move);
@@ -145,6 +130,7 @@ public class Board extends JPanel {
 
         capture(move.capture);
         switchTurn();
+        handleGameOver();
     }
 
     public void promotePawn(Move move){
@@ -175,9 +161,9 @@ public class Board extends JPanel {
         if (checkScanner.isKingChecked(move)){
             return false;
         }
-        if (move.piece.isWhite != this.isWhiteTurn){
-            return false;
-        }
+        // if (move.piece.isWhite != this.isWhiteTurn){
+        //     return false;
+        // }
         return true;
     }
 
@@ -272,6 +258,24 @@ public class Board extends JPanel {
         return !checkScanner.havePossibleMovesLeft(this.isWhiteTurn);
     }
 
+    private void handleGameOver(){
+        if (isGameOver()){
+            System.out.println("Game Over");
+            // check if the king is checked
+            if (checkScanner.isKingChecked(new Move(this, this.findKing(this.isWhiteTurn), 0, 0))){
+                // checkmate
+                if (this.isWhiteTurn){
+                    System.out.println("Black wins");
+                } else {
+                    System.out.println("White wins");
+                }
+            }
+            // stalemate
+            else {
+                System.out.println("Stalemate");
+            }
+        }
+    }
 
 
 }

@@ -25,7 +25,7 @@ public class Pawn extends Piece{
             return true;
         } 
         // push pawn 2
-        if (col == this.col && row == this.row + 2*dir && this.isFirstMove && board.getPiece(col, row) == null){
+        if (col == this.col && row == this.row + 2*dir && this.isFirstMove && board.getPiece(col, row) == null && board.getPiece(col, row - dir) == null){
             return true;
         }
         // capture

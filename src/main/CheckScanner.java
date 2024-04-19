@@ -135,7 +135,7 @@ public class CheckScanner {
         for (int r = 0; r < board.rows; r++){
             for (int c = 0; c < board.cols; c++){
                 if (board.isValidMove(new Move(board, piece, c, r))){
-                    System.out.println(piece.isWhite + "\'s"+ piece.name + " can move to " + c + " " + r);
+                    System.out.println((piece.isWhite?"White":"Black") + "\'s"+ piece.name + " can move to " + c + " " + r);
                     return true;
                 }
             }
