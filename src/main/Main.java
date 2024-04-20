@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Main {
     static final Color game_bgColor = new Color(25,29,50);
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Hello World");
+        JFrame frame = new JFrame("Chess Game");
         frame.getContentPane().setBackground(game_bgColor);
         frame.setLayout(new GridBagLayout());
         frame.setMinimumSize(new Dimension(1000,1000));
